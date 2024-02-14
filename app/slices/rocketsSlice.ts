@@ -4,8 +4,8 @@ import { put, select, takeLatest } from "redux-saga/effects";
 import { createModule } from "saga-slice";
 import { Rockets } from "../types/Rockets";
 
-interface RocketsState {
-  data: Rockets | [];
+export interface RocketsState {
+  data: ArrayLike<Rockets>;
   isFetching: boolean;
   error: AxiosError | null;
 }
