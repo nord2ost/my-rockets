@@ -36,7 +36,7 @@ export default function TabOneScreen() {
       dispatch(addToFavorites(rocket_id));
     };
 
-    const isFavoriteIcon = "hearto";
+    const isFavoriteIcon = "staro";
 
     return (
       <Link href="/modal" asChild>
