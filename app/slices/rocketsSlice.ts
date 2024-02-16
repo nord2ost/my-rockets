@@ -9,7 +9,7 @@ export interface RocketsState {
   isFetching: boolean;
   error: AxiosError | null;
   currentRocketId: string | null;
-  favorites: [string?];
+  favorites: string[];
 }
 
 const initialState: RocketsState = {
@@ -40,9 +40,13 @@ const rocketsSlice = createModule({
     setCurrentRocket: (state, payload: string): void => {
       state.currentRocketId = payload;
     },
-    addToFavorites: () => {},
-    resetCurrentRocket: (state) => {
-      state.currentRocketId = null;
+    toggleFavorites: (state, payload) => {
+      const index = state.favorites.indexOf(payload);
+      if (index === -1) {
+        state.favorites.push(payload);
+      } else {
+        state.favorites.splice(index, 1);
+      }
     },
   },
   takers: {
@@ -50,7 +54,7 @@ const rocketsSlice = createModule({
       "fetch",
       "setCurrentRocket",
       "resetCurrentRocket",
-      "addToFavorites",
+      "toggleFavorites",
     ],
   },
 
@@ -74,6 +78,6 @@ const rocketsSlice = createModule({
 });
 
 // Export actions for convenience when importing from other modules
-export const { fetch, setCurrentRocket, resetCurrentRocket, addToFavorites } =
+export const { fetch, setCurrentRocket, resetCurrentRocket, toggleFavorites } =
   rocketsSlice.actions;
 export default rocketsSlice;

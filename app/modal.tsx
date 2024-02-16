@@ -1,13 +1,25 @@
 import { StatusBar } from "expo-status-bar";
-import { Image, Platform, ScrollView, StyleSheet } from "react-native";
+import {
+  Image,
+  Platform,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+} from "react-native";
 
-import EditScreenInfo from "@/components/EditScreenInfo";
 import { Text, View } from "@/components/Themed";
-import { shallowEqual, useSelector } from "react-redux";
+import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { StoreState } from "./types/StoreState";
 import { Rockets } from "./types/Rockets";
+import { AntDesign } from "@expo/vector-icons";
+import { toggleFavorites } from "./slices/rocketsSlice";
 
 export default function ModalScreen() {
+  const dispatch = useDispatch();
+  const favorites = useSelector(
+    (state: StoreState) => state.rockets.favorites ?? []
+  );
+
   const currentRocket: Rockets | undefined = useSelector(
     (state: StoreState) =>
       state.rockets.data.find((m) => {
@@ -16,15 +28,32 @@ export default function ModalScreen() {
     shallowEqual
   );
 
-  const { flickr_images, first_flight, description, rocket_name } =
+  const { flickr_images, first_flight, description, rocket_id, rocket_name } =
     currentRocket ?? {};
   //TODO: add fallback placeholder
+
+  const isFavoriteIcon =
+    rocket_id && favorites.indexOf(rocket_id) === -1 ? "staro" : "star";
+  const isFavoriteLabel =
+    rocket_id && favorites.indexOf(rocket_id) === -1
+      ? "Add to favorites"
+      : "Remove from favorites";
+
+  const toggleFavorite = () => {
+    // @ts-expect-error Expected 0 arguments, but got 1.ts(2554)
+    dispatch(toggleFavorites(rocket_id));
+  };
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.title}>{rocket_name}</Text>
       <View style={styles.imageSection}>
         <Image style={styles.image} source={{ uri: flickr_images?.[0] }} />
       </View>
+      <Pressable style={styles.favoriteBtn} onPress={toggleFavorite}>
+        <AntDesign name={isFavoriteIcon} size={32} color="grey" />
+        <Text style={styles.label}>{isFavoriteLabel}</Text>
+      </Pressable>
       <View
         style={styles.separator}
         lightColor="#eee"
@@ -65,9 +94,19 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   separator: {
-    marginVertical: 30,
+    marginVertical: 15,
     borderBottomWidth: 1,
     height: 1,
     width: "80%",
+  },
+  favoriteBtn: {
+    flexDirection: "row",
+    marginTop: 5,
+    alignItems: "center",
+  },
+  label: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginLeft: 5,
   },
 });
