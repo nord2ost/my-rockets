@@ -82,13 +82,13 @@ const styles = StyleSheet.create({
   headerSection: { flex: 1, flexDirection: "row" },
   dataSection: { flex: 1, flexDirection: "row" },
   reactionSection: { flex: 0.1 },
-  imageSection: { flex: 1 },
   metadataSection: {
     flex: 1,
   },
   titleSection: {
     flex: 1,
   },
+  imageSection: { flex: 1 },
   image: {
     width: "100%",
     height: undefined,

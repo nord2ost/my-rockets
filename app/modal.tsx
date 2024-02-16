@@ -1,13 +1,11 @@
 import { StatusBar } from "expo-status-bar";
-import { Platform, StyleSheet } from "react-native";
+import { Image, Platform, ScrollView, StyleSheet } from "react-native";
 
 import EditScreenInfo from "@/components/EditScreenInfo";
 import { Text, View } from "@/components/Themed";
-import { shallowEqual, useDispatch, useSelector } from "react-redux";
+import { shallowEqual, useSelector } from "react-redux";
 import { StoreState } from "./types/StoreState";
 import { Rockets } from "./types/Rockets";
-import { useEffect } from "react";
-import { resetCurrentRocket } from "./slices/rocketsSlice";
 
 export default function ModalScreen() {
   const currentRocket: Rockets | undefined = useSelector(
@@ -17,37 +15,58 @@ export default function ModalScreen() {
       }),
     shallowEqual
   );
-  console.log(currentRocket);
-  const { rocket_name } = currentRocket ?? {};
+
+  const { flickr_images, first_flight, description, rocket_name } =
+    currentRocket ?? {};
   //TODO: add fallback placeholder
   return (
-    <View style={styles.container}>
+    <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.title}>{rocket_name}</Text>
+      <View style={styles.imageSection}>
+        <Image style={styles.image} source={{ uri: flickr_images?.[0] }} />
+      </View>
       <View
         style={styles.separator}
         lightColor="#eee"
         darkColor="rgba(255,255,255,0.1)"
       />
-      <EditScreenInfo path="app/modal.tsx" />
+      <Text style={styles.body}>{first_flight?.toString()}</Text>
+      <Text style={styles.body}>{description}</Text>
 
       {/* Use a light status bar on iOS to account for the black space above the modal */}
       <StatusBar style={Platform.OS === "ios" ? "light" : "auto"} />
-    </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    padding: 15,
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "flex-start",
+  },
+  imageSection: {},
+  image: {
+    borderRadius: 3,
+    width: "100%",
+    height: undefined,
+    aspectRatio: 1,
   },
   title: {
     fontSize: 20,
     fontWeight: "bold",
+    marginBottom: 5,
+  },
+  body: {
+    alignSelf: "flex-start",
+    fontSize: 20,
+    textAlign: "left",
+    marginBottom: 5,
   },
   separator: {
     marginVertical: 30,
+    borderBottomWidth: 1,
     height: 1,
     width: "80%",
   },
