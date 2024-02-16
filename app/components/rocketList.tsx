@@ -3,9 +3,9 @@ import AntDesign from "@expo/vector-icons/AntDesign";
 import { Text, View } from "@/components/Themed";
 import { useEffect } from "react";
 import {
-  addToFavorites,
   fetch,
   setCurrentRocket,
+  toggleFavorites,
 } from "../slices/rocketsSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { StoreState } from "../types/StoreState";
@@ -32,10 +32,11 @@ export default function RocketList({ rockets }: { rockets: Rockets[] }) {
 
     const toggleFavorite = () => {
       // @ts-expect-error Expected 0 arguments, but got 1.ts(2554)
-      dispatch(addToFavorites(rocket_id));
+      dispatch(toggleFavorites(rocket_id));
     };
 
-    const isFavoriteIcon = "staro";
+    const isFavoriteIcon =
+      favorites.indexOf(rocket_id) === -1 ? "staro" : "star";
 
     return (
       <Link href="/modal" asChild>
