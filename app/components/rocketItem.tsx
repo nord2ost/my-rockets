@@ -4,6 +4,8 @@ import { Link } from "expo-router";
 import { Image, Pressable, StyleSheet, Text } from "react-native";
 import Animated, {
   Easing,
+  FadeIn,
+  FadeOut,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
@@ -88,27 +90,29 @@ export default function RocketItem({ item }: { item: Rockets }) {
   return (
     <Link href="/modal" asChild>
       <Pressable style={styles.row} onPress={pressRow}>
-        <View style={styles.headerSection}>
-          <View>
-            <Text style={styles.title}>{rocket_name}</Text>
+        <Animated.View exiting={FadeOut}>
+          <View style={styles.headerSection}>
+            <View>
+              <Text style={styles.title}>{rocket_name}</Text>
+            </View>
           </View>
-        </View>
-        <View style={styles.imageSection}>
-          <Animated.View style={iconLikeStyle}>
-            <AntDesign name={"star"} size={200} color={"#FDBF60"} />
-          </Animated.View>
-          <Image style={styles.image} source={{ uri: flickr_images[0] }} />
-        </View>
-        <View style={styles.dataSection}>
-          <View style={styles.metadataSection}>
-            <Text style={styles.title}>{first_flight.toString()}</Text>
+          <View style={styles.imageSection}>
+            <Animated.View style={iconLikeStyle}>
+              <AntDesign name={"star"} size={200} color={"#FDBF60"} />
+            </Animated.View>
+            <Image style={styles.image} source={{ uri: flickr_images[0] }} />
           </View>
-          <View style={styles.reactionSection}>
-            <Pressable onPress={toggleFavorite}>
-              <AntDesign name={isFavoriteIcon} size={32} color="grey" />
-            </Pressable>
+          <View style={styles.dataSection}>
+            <View style={styles.metadataSection}>
+              <Text style={styles.title}>{first_flight.toString()}</Text>
+            </View>
+            <View style={styles.reactionSection}>
+              <Pressable onPress={toggleFavorite}>
+                <AntDesign name={isFavoriteIcon} size={32} color="grey" />
+              </Pressable>
+            </View>
           </View>
-        </View>
+        </Animated.View>
       </Pressable>
     </Link>
   );
