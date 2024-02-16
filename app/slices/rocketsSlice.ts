@@ -5,15 +5,19 @@ import { createModule } from "saga-slice";
 import { Rockets } from "../types/Rockets";
 
 export interface RocketsState {
-  data: ArrayLike<Rockets>;
+  data: Rockets[];
   isFetching: boolean;
   error: AxiosError | null;
+  currentRocketId: string | null;
+  favorites: [string?];
 }
 
 const initialState: RocketsState = {
   isFetching: false,
   data: [],
   error: null,
+  currentRocketId: null,
+  favorites: [],
 };
 
 const rocketsSlice = createModule({
@@ -33,9 +37,21 @@ const rocketsSlice = createModule({
       state.isFetching = false;
       state.error = payload;
     },
+    setCurrentRocket: (state, payload: string): void => {
+      state.currentRocketId = payload;
+    },
+    addToFavorites: () => {},
+    resetCurrentRocket: (state) => {
+      state.currentRocketId = null;
+    },
   },
   takers: {
-    takeLatest: ["fetch"],
+    takeLatest: [
+      "fetch",
+      "setCurrentRocket",
+      "resetCurrentRocket",
+      "addToFavorites",
+    ],
   },
 
   // The sagas option is a function that gets passed the Actions object.
@@ -46,6 +62,7 @@ const rocketsSlice = createModule({
     *[A.fetch]() {
       try {
         const { data } = yield axios.get(
+          //TODO: move to Constant
           "https://api.spacexdata.com/v3/rockets"
         );
         yield put(A.fetchSuccess(data));
@@ -57,5 +74,6 @@ const rocketsSlice = createModule({
 });
 
 // Export actions for convenience when importing from other modules
-export const { fetch } = rocketsSlice.actions;
+export const { fetch, setCurrentRocket, resetCurrentRocket, addToFavorites } =
+  rocketsSlice.actions;
 export default rocketsSlice;

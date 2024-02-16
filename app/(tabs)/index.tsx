@@ -1,78 +1,92 @@
-import {
-  FlatList,
-  FlatListComponent,
-  Image,
-  ImageSourcePropType,
-  ListRenderItem,
-  Pressable,
-  StyleSheet,
-} from "react-native";
+import { FlatList, Image, Pressable, StyleSheet } from "react-native";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { Text, View } from "@/components/Themed";
 import { useEffect } from "react";
-import { RocketsState, fetch } from "../slices/rocketsSlice";
+import {
+  addToFavorites,
+  fetch,
+  setCurrentRocket,
+} from "../slices/rocketsSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { StoreState } from "../types/StoreState";
 import { Rockets } from "../types/Rockets";
+import EditScreenInfo from "@/components/EditScreenInfo";
+import { Link } from "expo-router";
 
 export default function TabOneScreen() {
   const rockets = useSelector((state: StoreState) => state.rockets.data);
+  const favorites = useSelector(
+    (state: StoreState) => state.rockets.favorites ?? []
+  );
+
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(fetch());
   }, []);
-  const renderItem = ({ item }: { item: Rockets }) => {
-    const { id, flickr_images, first_flight, description, rocket_name } = item;
-    console.log(flickr_images[0]);
-    return (
-      <Pressable style={styles.row}>
-        <View style={styles.headerSection}>
-          <View>
-            <Text style={styles.title}>{rocket_name}</Text>
-          </View>
-        </View>
-        <View style={styles.imageSection}>
-          <Image
-            style={styles.image}
-            source={{ uri: flickr_images[0] } as ImageSourcePropType}
-          />
-        </View>
-        <View style={styles.dataSection}>
-          <View style={styles.metadataSection}>
-            <Text style={styles.title}>{first_flight}</Text>
-            <Text style={styles.title}>{description}</Text>
-          </View>
-          <View style={styles.reactionSection}>
-            <Pressable>
-              <AntDesign name="hearto" size={32} color="grey" />
-            </Pressable>
-          </View>
-        </View>
 
-        {/* <View style={styles.mainSection}>
+  const renderItem = ({ item }: { item: Rockets }) => {
+    const { id, flickr_images, first_flight, rocket_id, rocket_name } = item;
+    const pressRow = () => {
+      // @ts-expect-error Expected 0 arguments, but got 1.ts(2554)
+      dispatch(setCurrentRocket(rocket_id));
+    };
+
+    const toggleFavorite = () => {
+      // @ts-expect-error Expected 0 arguments, but got 1.ts(2554)
+      dispatch(addToFavorites(rocket_id));
+    };
+
+    const isFavoriteIcon = "hearto";
+
+    return (
+      <Link href="/modal" asChild>
+        <Pressable style={styles.row} onPress={pressRow}>
+          <View style={styles.headerSection}>
+            <View>
+              <Text style={styles.title}>{rocket_name}</Text>
+            </View>
+          </View>
+          <View style={styles.imageSection}>
+            <Image style={styles.image} source={{ uri: flickr_images[0] }} />
+          </View>
+          <View style={styles.dataSection}>
+            <View style={styles.metadataSection}>
+              <Text style={styles.title}>{first_flight.toString()}</Text>
+            </View>
+            <View style={styles.reactionSection}>
+              <Pressable onPress={toggleFavorite}>
+                <AntDesign name={isFavoriteIcon} size={32} color="grey" />
+              </Pressable>
+            </View>
+          </View>
+
+          {/* <View style={styles.mainSection}>
           
           <View style={styles.checkContainer}></View>
         </View> */}
-      </Pressable>
+        </Pressable>
+      </Link>
     );
   };
   return (
-    <FlatList
-      contentContainerStyle={styles.container}
-      renderItem={renderItem}
-      data={rockets}
-    ></FlatList>
+    <>
+      <FlatList
+        keyExtractor={(item) => item.id.toString()}
+        contentContainerStyle={styles.container}
+        renderItem={renderItem}
+        extraData={favorites}
+        data={rockets}
+      ></FlatList>
+    </>
   );
 }
 
 const styles = StyleSheet.create({
-  row: { borderWidth: 1, flex: 1 },
-  container: {
-    borderWidth: 1,
-  },
+  row: { flex: 1 },
+  container: {},
   headerSection: { flex: 1, flexDirection: "row" },
   dataSection: { flex: 1, flexDirection: "row" },
-  reactionSection: { flex: 0.1, borderWidth: 1 },
+  reactionSection: { flex: 0.1 },
   imageSection: { flex: 1 },
   metadataSection: {
     flex: 1,
