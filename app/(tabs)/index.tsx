@@ -10,7 +10,6 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { StoreState } from "../types/StoreState";
 import { Rockets } from "../types/Rockets";
-import EditScreenInfo from "@/components/EditScreenInfo";
 import { Link } from "expo-router";
 
 export default function TabOneScreen() {
@@ -25,7 +24,8 @@ export default function TabOneScreen() {
   }, []);
 
   const renderItem = ({ item }: { item: Rockets }) => {
-    const { id, flickr_images, first_flight, rocket_id, rocket_name } = item;
+    const { flickr_images, first_flight, rocket_id, rocket_name } = item;
+
     const pressRow = () => {
       // @ts-expect-error Expected 0 arguments, but got 1.ts(2554)
       dispatch(setCurrentRocket(rocket_id));
@@ -59,11 +59,6 @@ export default function TabOneScreen() {
               </Pressable>
             </View>
           </View>
-
-          {/* <View style={styles.mainSection}>
-          
-          <View style={styles.checkContainer}></View>
-        </View> */}
         </Pressable>
       </Link>
     );
