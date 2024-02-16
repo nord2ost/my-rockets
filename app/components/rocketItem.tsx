@@ -1,10 +1,9 @@
-import { View } from "@/components/Themed";
+import { View, Text } from "@/components/Themed";
 import { AntDesign } from "@expo/vector-icons";
 import { Link } from "expo-router";
-import { Image, Pressable, StyleSheet, Text } from "react-native";
+import { Image, Pressable, StyleSheet } from "react-native";
 import Animated, {
   Easing,
-  FadeIn,
   FadeOut,
   useAnimatedStyle,
   useSharedValue,
@@ -119,7 +118,7 @@ export default function RocketItem({ item }: { item: Rockets }) {
 }
 
 const styles = StyleSheet.create({
-  row: { flex: 1 },
+  row: { flex: 1, marginVertical: 5 },
   headerSection: { flex: 1, flexDirection: "row" },
   dataSection: { flex: 1, flexDirection: "row" },
   reactionSection: { flex: 0.1 },
