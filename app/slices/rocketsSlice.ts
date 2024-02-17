@@ -3,6 +3,7 @@ import axios, { AxiosError } from "axios";
 import { put, select, takeLatest } from "redux-saga/effects";
 import { createModule } from "saga-slice";
 import { Rockets } from "../types/Rockets";
+import { rocketsURL } from "@/constants/api";
 
 export interface RocketsState {
   data: Rockets[];
@@ -67,7 +68,7 @@ const rocketsSlice = createModule({
       try {
         const { data } = yield axios.get(
           //TODO: move to Constant
-          "https://api.spacexdata.com/v3/rockets"
+          rocketsURL
         );
         yield put(A.fetchSuccess(data));
       } catch (e) {

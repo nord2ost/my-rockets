@@ -30,7 +30,6 @@ export default function ModalScreen() {
 
   const { flickr_images, first_flight, description, rocket_id, rocket_name } =
     currentRocket ?? {};
-  //TODO: add fallback placeholder
 
   const isFavoriteIcon =
     rocket_id && favorites.indexOf(rocket_id) === -1 ? "staro" : "star";
