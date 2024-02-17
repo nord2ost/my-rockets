@@ -87,7 +87,7 @@ export default function RocketItem({ item }: { item: Rockets }) {
   };
 
   return (
-    <Link href="/modal" asChild>
+    <Link href="/details" asChild>
       <Pressable style={styles.row} onPress={pressRow}>
         <Animated.View exiting={FadeOut}>
           <View style={styles.headerSection}>
